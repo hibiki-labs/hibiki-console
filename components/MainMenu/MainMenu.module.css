@@ -1,0 +1,32 @@
+.card {
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    border-color 200ms ease;
+  cursor: pointer;
+  background-color: var(--mantine-color-body);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--mantine-shadow-md);
+  border-color: var(--mantine-color-blue-3);
+}
+
+/* Optional: animate the chevron on hover */
+.card:hover .chevron {
+  transform: translateX(4px);
+  color: var(--mantine-color-blue-6);
+}
+
+.chevron {
+  transition:
+    transform 200ms ease,
+    color 200ms ease;
+  color: var(--mantine-color-dimmed);
+}
+
+.title {
+  font-family: var(--mantine-font-family);
+  line-height: 1.2;
+}
