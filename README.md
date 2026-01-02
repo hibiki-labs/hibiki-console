@@ -41,6 +41,22 @@
 - **PostgreSQL**: v12 or higher
 - **Bun**: v1.0+ (optional, for faster development) - [Install Bun](https://bun.sh)
 
+### Recommended VS Code Extensions
+
+For the best development experience, install these extensions:
+
+- **[Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)** (`esbenp.prettier-vscode`)
+  Automatically formats code using Prettier
+
+- **[ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)** (`dbaeumer.vscode-eslint`)
+  Integrates ESLint JavaScript linting into VS Code
+
+- **[PostgreSQL](https://marketplace.visualstudio.com/items?itemName=ms-ossdata.vscode-pgsql)** (`ms-ossdata.vscode-pgsql`)
+  Develop PostgreSQL applications with query editor, IntelliSense, and database management
+
+- **[Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)** (`bierner.markdown-mermaid`)
+  Adds Mermaid diagram and flowchart support to VS Code's markdown preview
+
 ### 1. Clone and Install
 
 ```bash
