@@ -389,6 +389,16 @@ bun install
 bun run build
 ```
 
+#### Git Push Issues
+
+If you encounter authentication or credential issues when pushing to a remote repository:
+
+```bash
+git config --global --unset credential.helper
+```
+
+This clears the global credential helper configuration, which can resolve issues with cached or incorrect credentials.
+
 ---
 
 ## Additional Resources
