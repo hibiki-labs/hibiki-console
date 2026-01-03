@@ -1,7 +1,6 @@
 import amqp, { Channel, Connection } from "amqplib";
 import { rabbitMQConnectionURL } from "../config";
-import { config } from "dotenv";
-config();
+
 
 export class RabbitMQ {
     private static instance: RabbitMQ;

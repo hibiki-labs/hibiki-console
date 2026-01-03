@@ -1,8 +1,7 @@
 import { Channel } from "amqplib";
 import { RabbitMQ } from "@/mq/rabbitmq.connection";
 import { RabbitMQConfig } from "../rabbitmq.config";
-import { config } from "dotenv";
-config();
+
 
 
 export async function publishEmbedTextFile(fileObjectKey: string): Promise<void> {
