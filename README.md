@@ -304,17 +304,23 @@ sudo systemctl status hibiki
 
 ### Database Configuration
 
-| Variable            | Description                 | Default            | Required |
-|---------------------|-----------------------------|--------------------|----------|
-| DB_HOST             | PostgreSQL host address     | 127.0.0.1          | Yes      |
-| DB_PORT             | PostgreSQL port             | 5432               | Yes      |
-| DB_NAME             | Database name               | hibiki_console     | Yes      |
-| DB_USER_NAME        | Database user               | hibiki_console     | Yes      |
-| DB_USER_PASS        | Database password           | -                  | Yes      |
-| RABBITMQ_HOST       | RabbitMQ host address       | localhost          | Yes      |
-| RABBITMQ_PORT       | RabbitMQ port               | 5672               | Yes      |
-| RABBITMQ_USER       | RabbitMQ username           | admin              | Yes      |
-| RABBITMQ_PASSWORD   | RabbitMQ password           | admin123           | Yes      |
+| Variable       | Description                 | Default          | Required |
+|----------------|-----------------------------|------------------|----------|
+| DB_HOST        | PostgreSQL host address     | 127.0.0.1        | Yes      |
+| DB_PORT        | PostgreSQL port             | 5432             | Yes      |
+| DB_NAME        | Database name               | hibiki_console   | Yes      |
+| DB_USER_NAME   | Database user               | hibiki_console   | Yes      |
+| DB_USER_PASS   | Database password           | -                | Yes      |
+
+### RabbitMQ Configuration
+
+| Variable            | Description           | Default    | Required |
+|---------------------|-----------------------|------------|----------|
+| RABBITMQ_HOST       | RabbitMQ host address | localhost  | Yes      |
+| RABBITMQ_PORT       | RabbitMQ port         | 5672       | Yes      |
+| RABBITMQ_USER       | RabbitMQ username     | admin      | Yes      |
+| RABBITMQ_PASSWORD   | RabbitMQ password     | admin123   | Yes      |
+
 
 ### Authentication Configuration
 
