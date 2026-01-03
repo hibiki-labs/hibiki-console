@@ -37,7 +37,6 @@ export class RabbitMQ {
             process.exit(1);
         }
 
-        throw new Error("Unreachable: failed to connect to RabbitMQ");
     }
 
     // Get the channel
