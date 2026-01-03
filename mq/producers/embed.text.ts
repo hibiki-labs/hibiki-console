@@ -1,6 +1,6 @@
 import { Channel } from "amqplib";
-import { RabbitMQ } from "@/lib/mq/rabbitmq.connection";
-import { RabbitMQConfig } from "@/lib/config";
+import { RabbitMQ } from "@/mq/rabbitmq.connection";
+import { RabbitMQConfig } from "../rabbitmq.config";
 import { config } from "dotenv";
 config();
 
