@@ -1,12 +1,14 @@
 export type ScreenItem = {
   id: number;
   title: string;
+  path?: string;
 };
 
 export type SubMenuItem = {
   id: string;
   title: string;
   screens: ScreenItem[];
+  path?: string;
 };
 
 export type MenuItem = {
@@ -16,4 +18,5 @@ export type MenuItem = {
   color: string;
   feature?: string;
   subMenu: SubMenuItem[];
+  path?: string;
 };

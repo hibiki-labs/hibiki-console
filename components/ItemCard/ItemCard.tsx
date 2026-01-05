@@ -25,7 +25,9 @@ export default function ItemCard({
       menuId?: undefined;
     }) {
   let href = '#';
-  if (type === 'menu-item') {
+  if (item.path) {
+    href = item.path;
+  } else if (type === 'menu-item') {
     href = `/menu/${item.id}`;
   } else if (type === 'submenu-item') {
     href = `/menu/${menuId}/submenu/${item.id}`;

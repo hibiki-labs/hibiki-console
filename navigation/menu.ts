@@ -11,10 +11,12 @@ const menu: MenuItem[] = [
     icon: 'IconDashboard',
     color: 'blue',
     feature: 'dashboard',
+    // path: '/dashboard/sources',
     subMenu: [
       {
         id: '1',
         title: 'Overview',
+        path: '/dashboard/sources',
         screens: [{ id: 1001, title: 'Dashboard Overview' }],
       },
       {
@@ -26,6 +28,12 @@ const menu: MenuItem[] = [
         id: '3',
         title: 'Activity Feed',
         screens: [{ id: 1003, title: 'Recent Activity' }],
+      },
+      {
+        id: '4',
+        title: 'Sources',
+        // path: '/dashboard/sources',
+        screens: [{ id: 1004, title: 'Manage Sources' }],
       },
     ],
   },
