@@ -2,7 +2,7 @@
 
 import { DataTable } from 'mantine-datatable';
 import { Badge, Group, ActionIcon, Text, Box } from '@mantine/core';
-import { IconTrash, IconEye, IconRefresh } from '@tabler/icons-react';
+import { IconTrash, IconEye } from '@tabler/icons-react';
 import { SourceDocument, DocumentStatus } from '@/types/sources';
 import 'mantine-datatable/styles.css';
 
@@ -35,7 +35,7 @@ const getStatusColor = (status: DocumentStatus) => {
 export default function SourceTable({ records, fetching, onDelete, onView }: SourceTableProps) {
   return (
     <Box>
-       <DataTable
+      <DataTable<SourceDocument>
         withTableBorder
         borderRadius="sm"
         withColumnBorders
@@ -53,17 +53,13 @@ export default function SourceTable({ records, fetching, onDelete, onView }: Sou
           {
             accessor: 'fileSize',
             title: 'Size',
-            render: ({ fileSize }) => (
-                <Text size="sm">{(fileSize / 1024 / 1024).toFixed(2)} MB</Text>
-            )
+            render: ({ fileSize }) => <Text size="sm">{(fileSize / 1024 / 1024).toFixed(2)} MB</Text>,
           },
           {
             accessor: 'uploadedAt',
             title: 'Uploaded At',
             sortable: true,
-            render: ({ uploadedAt }) => (
-                <Text size="sm">{new Date(uploadedAt).toLocaleDateString()}</Text>
-            )
+            render: ({ uploadedAt }) => <Text size="sm">{new Date(uploadedAt).toLocaleDateString()}</Text>,
           },
           {
             accessor: 'status',

@@ -79,19 +79,21 @@ export default function DashboardSourcesPage() {
       }
 
       const result = await response.json();
-      
+
       if (result.success && result.data) {
         // Add new files to the list
-        const newRecords: SourceDocument[] = result.data.map((file: any) => ({
-          id: file.fileName, // Using filename as ID for now
-          filename: file.originalName,
-          fileSize: file.size,
-          mimeType: file.mimeType,
-          uploadedAt: new Date().toISOString(),
-          uploadedBy: 'current-user', // Placeholder
-          status: 'uploaded',
-        }));
-        
+        const newRecords: SourceDocument[] = result.data.map(
+          (file: { fileName: string; originalName: string; size: number; mimeType: string }) => ({
+            id: file.fileName, // Using filename as ID for now
+            filename: file.originalName,
+            fileSize: file.size,
+            mimeType: file.mimeType,
+            uploadedAt: new Date().toISOString(),
+            uploadedBy: 'current-user', // Placeholder
+            status: 'uploaded' as const,
+          })
+        );
+
         setRecords((prev) => [...newRecords, ...prev]);
         alert('Files uploaded successfully!');
       }
