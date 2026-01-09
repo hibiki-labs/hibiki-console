@@ -1,11 +1,12 @@
 import amqp, { Channel, Connection } from "amqplib";
-import { rabbitMQConnectionURL } from "../config";
+import { rabbitMQConnectionURL } from "./rabbitmq.config";
 
 
 export class RabbitMQ {
     private static instance: RabbitMQ;
 
-    private connection: Connection | null = null;
+    private channelModel: amqp.ChannelModel | null = null;
+    // private connection: Connection | null = null;
     private channel: Channel | null = null;
 
     // Private constructor ensures it can't be instantiated outside
@@ -21,17 +22,19 @@ export class RabbitMQ {
 
     // Connect to RabbitMQ
     public async connect(): Promise<{ connection: Connection; channel: Channel }> {
-        if (this.connection && this.channel) {
+        if (this.channelModel?.connection && this.channel) {
             console.log("Already connected to RabbitMQ");
-            return { connection: this.connection, channel: this.channel };
+            return { connection: this.channelModel.connection, channel: this.channel };
         }
 
         try {
-            this.connection = await amqp.connect(rabbitMQConnectionURL());
-            this.channel = await this.connection.createChannel();
+
+            this.channelModel = (await amqp.connect(rabbitMQConnectionURL()));
+            this.channelModel.connection = this.channelModel.connection;
+            this.channel = await this.channelModel.createChannel();
             console.log("Connected to RabbitMQ successfully");
 
-            return { connection: this.connection, channel: this.channel };
+            return { connection: this.channelModel.connection, channel: this.channel };
         } catch (error) {
             console.error("Failed to connect to RabbitMQ:", error);
             process.exit(1);
@@ -55,9 +58,9 @@ export class RabbitMQ {
                 this.channel = null;
                 console.log("RabbitMQ channel closed");
             }
-            if (this.connection) {
-                await this.connection.close();
-                this.connection = null;
+            if (this.channelModel?.connection) {
+                await this.channelModel?.close();
+                this.channelModel = null;
                 console.log("RabbitMQ connection closed");
             }
         } catch (error) {
