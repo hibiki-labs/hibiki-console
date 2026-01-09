@@ -1,0 +1,218 @@
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+}
+
+/* Brand Section - Left Side */
+.brandSection {
+  display: none;
+  position: relative;
+  overflow: hidden;
+  background-image: url(/bg2.png);
+  background-size: cover;
+  background-position: center;
+}
+
+@media (min-width: 992px) {
+  .brandSection {
+    display: flex;
+    width: 50%;
+  }
+}
+
+.brandOverlay {
+  position: absolute;
+  inset: 0;
+  background: light-dark(
+    /* Light mode: Deeper cyan shades for better text contrast */
+      linear-gradient(
+        135deg,
+        rgba(6, 182, 212, 0.88) 0%,
+        rgba(8, 145, 178, 0.9) 25%,
+        rgba(14, 116, 144, 0.92) 50%,
+        rgba(21, 94, 117, 0.93) 75%,
+        rgba(22, 78, 99, 0.95) 100%
+      ),
+    /* Dark mode: Black and Cyan */
+      linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.92) 0%,
+        rgba(8, 47, 73, 0.93) 25%,
+        rgba(21, 94, 117, 0.9) 50%,
+        rgba(14, 116, 144, 0.88) 75%,
+        rgba(6, 182, 212, 0.85) 100%
+      )
+  );
+  /* Add subtle radial gradients for depth */
+  background-image:
+    light-dark(
+      radial-gradient(circle at 20% 20%, rgba(34, 211, 238, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 20% 20%, rgba(6, 182, 212, 0.3) 0%, transparent 50%)
+    ),
+    light-dark(
+      radial-gradient(circle at 80% 80%, rgba(103, 232, 249, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(34, 211, 238, 0.25) 0%, transparent 50%)
+    ),
+    light-dark(
+      linear-gradient(
+        135deg,
+        rgba(6, 182, 212, 0.88) 0%,
+        rgba(8, 145, 178, 0.9) 25%,
+        rgba(14, 116, 144, 0.92) 50%,
+        rgba(21, 94, 117, 0.93) 75%,
+        rgba(22, 78, 99, 0.95) 100%
+      ),
+      linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.92) 0%,
+        rgba(8, 47, 73, 0.93) 25%,
+        rgba(21, 94, 117, 0.9) 50%,
+        rgba(14, 116, 144, 0.88) 75%,
+        rgba(6, 182, 212, 0.85) 100%
+      )
+    );
+  backdrop-filter: blur(1px);
+}
+
+.animatedCircles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.circle1 {
+  position: absolute;
+  top: 80px;
+  left: 80px;
+  width: 256px;
+  height: 256px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.circle2 {
+  position: absolute;
+  bottom: 80px;
+  right: 80px;
+  width: 320px;
+  height: 320px;
+  background: rgba(6, 182, 212, 0.2);
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: pulse 3s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.brandContent {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 64px;
+  color: white;
+}
+
+.logoBox {
+  width: 48px;
+  height: 48px;
+  background-color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mantine-color-cyan-6);
+}
+
+.welcomeTitle {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.featureIcon {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+/* Form Section - Right Side */
+.formSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
+}
+
+.mobileOnly {
+  display: flex;
+}
+
+@media (min-width: 992px) {
+  .mobileOnly {
+    display: none;
+  }
+}
+
+.mobileLogoBox {
+  width: 40px;
+  height: 40px;
+  background-color: var(--mantine-color-cyan-6);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.otpIconBox {
+  width: 64px;
+  height: 64px;
+  background-color: light-dark(var(--mantine-color-cyan-0), var(--mantine-color-cyan-9));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mantine-color-cyan-6);
+  margin-bottom: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .formSection {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .formSection {
+    padding: 16px;
+  }
+
+  .welcomeTitle {
+    font-size: 2rem;
+  }
+}
