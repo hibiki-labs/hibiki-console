@@ -2,10 +2,12 @@ import 'reflect-metadata';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/spotlight/styles.css';
+import '@mantine/notifications/styles.css';
 import './global.css';
 
 import React, { Suspense } from 'react';
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import { theme } from '../theme';
 
 import { cookies } from 'next/headers';
@@ -16,6 +18,7 @@ import interFont from '@/fonts/inter-font';
 import { getFilteredMenu } from '@/navigation/menu';
 import getSessionOptions from '@/session/options';
 import TSessionPayload from '@/types/session-payload';
+import Providers from '@/components/Providers/Providers';
 
 export const metadata = {
   title: 'B@ncs Crest',
@@ -36,19 +39,22 @@ export default async function RootLayout({ children }: { children: any }) {
         />
       </head>
       <body>
-        <MantineProvider theme={theme}>
-          <ViewportGuard>
-              <Suspense fallback={<div>Loading...</div>}>
-                {session.user ? (
-                  <AppShellLayout menu={await getFilteredMenu(session.user)}>
-                    {children}
-                  </AppShellLayout>
-                ) : (
-                  children
-                )}
-              </Suspense>
-          </ViewportGuard>
-        </MantineProvider>
+        <Providers>
+          <MantineProvider theme={theme}>
+            <Notifications />
+            <ViewportGuard>
+                <Suspense fallback={<div>Loading...</div>}>
+                  {session.user ? (
+                    <AppShellLayout menu={await getFilteredMenu(session.user)}>
+                      {children}
+                    </AppShellLayout>
+                  ) : (
+                    children
+                  )}
+                </Suspense>
+            </ViewportGuard>
+          </MantineProvider>
+        </Providers>
       </body>
     </html>
   );

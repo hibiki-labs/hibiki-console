@@ -1,108 +1,91 @@
 'use client';
 
 import { Container, Title, Stack, Group, Button, Paper } from '@mantine/core';
-import { useState } from 'react';
 import { IconRefresh } from '@tabler/icons-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { notifications } from '@mantine/notifications';
 import FileUploadPanel from '@/components/FileUploadPanel/FileUploadPanel';
 import SourceTable from '@/components/SourceTable/SourceTable';
 import { SourceDocument } from '@/types/sources';
 
-// Mock data for initial display
-const MOCK_DATA: SourceDocument[] = [
-  {
-    id: '1',
-    filename: 'quarterly_report_q1.pdf',
-    fileSize: 2500000,
-    mimeType: 'application/pdf',
-    uploadedAt: new Date().toISOString(),
-    uploadedBy: 'user-1',
-    status: 'indexed',
-  },
-  {
-    id: '2',
-    filename: 'onboarding_guide.docx',
-    fileSize: 1200000,
-    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    uploadedAt: new Date(Date.now() - 86400000).toISOString(),
-    uploadedBy: 'user-1',
-    status: 'processing',
-  },
-  {
-    id: '3',
-    filename: 'api_spec_v1.md',
-    fileSize: 45000,
-    mimeType: 'text/markdown',
-    uploadedAt: new Date(Date.now() - 172800000).toISOString(),
-    uploadedBy: 'user-2',
-    status: 'failed',
-  },
-];
-
 export default function DashboardSourcesPage() {
-  const [records, setRecords] = useState<SourceDocument[]>(MOCK_DATA);
-  const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const queryClient = useQueryClient();
 
-  const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this source?')) {
-      setRecords((prev) => prev.filter((r) => r.id !== id));
-    }
-  };
+  // Fetching documents
+  const { data: records = [], isLoading, refetch, isFetching } = useQuery<SourceDocument[]>({
+    queryKey: ['sources'],
+    queryFn: async () => {
+      const response = await fetch('/api/sources');
+      if (!response.ok) {throw new Error('Failed to fetch sources');}
+      return response.json();
+    },
+  });
 
-  const handleView = (record: SourceDocument) => {
-    alert(`Viewing details for: ${record.filename}`);
-  };
+  // Uploading documents
+  const uploadMutation = useMutation({
+    mutationFn: async (files: File[]) => {
+      const formData = new FormData();
+      files.forEach((file) => formData.append('file', file));
 
-  const handleRefresh = () => {
-    setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  };
-
-  const handleUpload = async (files: File[]) => {
-    setUploading(true);
-    const formData = new FormData();
-    files.forEach((file) => {
-      formData.append('file', file);
-    });
-
-    try {
       const response = await fetch('/api/file-upload', {
         method: 'POST',
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
+      if (!response.ok) {throw new Error('Upload failed');}
+      return response.json();
+    },
+    onSuccess: () => {
+      notifications.show({
+        title: 'Success',
+        message: 'Files uploaded successfully!',
+        color: 'green',
+      });
+      queryClient.invalidateQueries({ queryKey: ['sources'] });
+    },
+    onError: (error) => {
+      notifications.show({
+        title: 'Upload Error',
+        message: error instanceof Error ? error.message : 'Failed to upload files',
+        color: 'red',
+      });
+    },
+  });
 
-      const result = await response.json();
+  // Deleting documents
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`/api/sources?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {throw new Error('Delete failed');}
+      return response.json();
+    },
+    onSuccess: () => {
+      notifications.show({
+        title: 'Deleted',
+        message: 'Source document removed successfully',
+        color: 'blue',
+      });
+      queryClient.invalidateQueries({ queryKey: ['sources'] });
+    },
+    onError: (error) => {
+      notifications.show({
+        title: 'Error',
+        message: error instanceof Error ? error.message : 'Failed to delete source',
+        color: 'red',
+      });
+    },
+  });
 
-      if (result.success && result.data) {
-        // Add new files to the list
-        const newRecords: SourceDocument[] = result.data.map(
-          (file: { fileName: string; originalName: string; size: number; mimeType: string }) => ({
-            id: file.fileName, // Using filename as ID for now
-            filename: file.originalName,
-            fileSize: file.size,
-            mimeType: file.mimeType,
-            uploadedAt: new Date().toISOString(),
-            uploadedBy: 'current-user', // Placeholder
-            status: 'uploaded' as const,
-          })
-        );
-
-        setRecords((prev) => [...newRecords, ...prev]);
-        alert('Files uploaded successfully!');
-      }
-    } catch (error) {
-      console.error('Error uploading files:', error);
-      alert('Failed to upload files. Please try again.');
-    } finally {
-      setUploading(false);
+  const handleDelete = (id: string) => {
+    if (confirm('Are you sure you want to delete this source?')) {
+      deleteMutation.mutate(id);
     }
+  };
+
+  const handleView = (record: SourceDocument) => {
+    alert(`Viewing details for: ${record.filename}`);
   };
 
   return (
@@ -113,8 +96,8 @@ export default function DashboardSourcesPage() {
           <Button 
             variant="light" 
             leftSection={<IconRefresh size={16} />}
-            onClick={handleRefresh}
-            loading={loading}
+            onClick={() => refetch()}
+            loading={isLoading || isFetching}
           >
             Refresh
           </Button>
@@ -123,8 +106,8 @@ export default function DashboardSourcesPage() {
         <Paper p="md" withBorder radius="md">
           <Title order={4} mb="md">Upload New Documents</Title>
           <FileUploadPanel 
-            onDrop={handleUpload}
-            loading={uploading}
+            onDrop={(files) => uploadMutation.mutate(files)}
+            loading={uploadMutation.isPending}
           />
         </Paper>
 
@@ -132,7 +115,7 @@ export default function DashboardSourcesPage() {
            <Title order={4} mb="md">Document Library</Title>
            <SourceTable 
              records={records} 
-             fetching={loading}
+             fetching={isLoading}
              onDelete={handleDelete}
              onView={handleView}
            />

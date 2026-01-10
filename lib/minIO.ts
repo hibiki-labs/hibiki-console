@@ -55,3 +55,49 @@ export async function uploadFile(
 export async function getPresignedUrl(objectName: string, expiry = 24 * 60 * 60) {
   return await minioClient.presignedGetObject(BUCKET_NAME, objectName, expiry);
 }
+
+/**
+ * Lists all files in the bucket with their metadata.
+ */
+export async function listFiles() {
+  await ensureBucketExists();
+  const objects: any[] = [];
+  const stream = minioClient.listObjectsV2(BUCKET_NAME, '', true);
+
+  return new Promise<any[]>((resolve, reject) => {
+    stream.on('data', (obj) => objects.push(obj));
+    stream.on('end', async () => {
+      try {
+        const filesWithMetadata = await Promise.all(
+          objects.map(async (obj) => {
+            try {
+              const stat = await minioClient.statObject(BUCKET_NAME, obj.name);
+              return {
+                ...obj,
+                metaData: stat.metaData,
+                lastModified: stat.lastModified,
+                size: stat.size,
+              };
+            } catch (e) {
+              console.error(`Error getting metadata for ${obj.name}`, e);
+              return obj;
+            }
+          })
+        );
+        resolve(filesWithMetadata);
+      } catch (err) {
+        reject(err);
+      }
+    });
+    stream.on('error', (err) => reject(err));
+  });
+}
+
+/**
+ * Deletes a file from the bucket.
+ * @param objectName The name of the object to delete
+ */
+export async function deleteFile(objectName: string) {
+  await ensureBucketExists();
+  await minioClient.removeObject(BUCKET_NAME, objectName);
+}
